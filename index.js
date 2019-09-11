@@ -1,5 +1,6 @@
 const fetch = require('node-fetch')
-var Twit = require('twit')
+const Twit = require('twit')
+const graph = require('fbgraph')
 
 const { words } = require('./words.js')
 
@@ -20,14 +21,31 @@ async function getMeaning(word) {
     return meaning
 }
 
-async function post() {
-    // pick one at random
-    const word = words[Math.floor(Math.random() * words.length)]
+function facebook(text) {
+    // facebook
+    graph.setAccessToken(process.env.fb_dj_access_token)
 
-    const meaning = await getMeaning(word)
+    // get page accounts
+    graph.get('me/accounts', function(err, res) {
 
-    const text = meaning ? `${word}: ${meaning}` : word
+        const dj = res.data.find(p => p.name === 'Daily Jzx');
 
+        // change access token to page's
+        graph.setAccessToken(dj.access_token)
+
+        // create message
+        var post = {
+            message: text
+        }
+
+        // post to page
+        graph.post('/' + dj.id + '/feed', post, function(err, res) {
+            // console.log(res)
+        })
+    })
+}
+
+function tweet(text) {
     const T = new Twit({
         consumer_key: process.env.tw_jzx_consumer_key,
         consumer_secret: process.env.tw_jzx_consumer_secret,
@@ -42,11 +60,25 @@ async function post() {
             console.log(err)
         }
     })
+}
+
+async function post() {
+    // pick one at random
+    const word = words[Math.floor(Math.random() * words.length)]
+
+    const meaning = await getMeaning(word)
+
+    const text = meaning ? `${word}: ${meaning}` : word
+
+    tweet(text)
+
+    facebook(text)
 
     return word
 }
 
 // test - remove before deploying
+
 // post()
 
 // lambda
