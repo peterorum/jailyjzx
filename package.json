@@ -1,0 +1,15 @@
+{
+  "name": "dailyjzx",
+  "version": "1.0.0",
+  "description": "Post random short valuable word-game words",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "peter@peterorum.com",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "prettier": "^1.18.2"
+  }
+}
