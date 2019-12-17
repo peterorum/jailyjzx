@@ -77,7 +77,7 @@ async function post() {
 
   const text = meaning ? `${word}: ${meaning}` : word;
 
-  tweet(text);
+  tweet(text.length < 140 ? text : word);
 
   facebook(text);
 
