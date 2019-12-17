@@ -22,8 +22,6 @@ async function getMeaning(word) {
 }
 
 function facebook(text) {
-  console.log("facebook", text);
-
   // facebook
   graph.setAccessToken(process.env.fb_dj_access_token);
 
@@ -47,8 +45,6 @@ function facebook(text) {
 }
 
 function tweet(text) {
-  console.log("tweet", text);
-
   const T = new Twit({
     consumer_key: process.env.tw_jzx_consumer_key,
     consumer_secret: process.env.tw_jzx_consumer_secret,
@@ -68,8 +64,6 @@ function tweet(text) {
 async function post() {
   // pick one at random
   const word = words[Math.floor(Math.random() * words.length)];
-
-  console.log("word", word);
 
   const meaning = await getMeaning(word);
 
