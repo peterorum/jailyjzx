@@ -1,80 +1,87 @@
-const fetch = require('node-fetch')
-const Twit = require('twit')
-const graph = require('fbgraph')
+const fetch = require("node-fetch");
+const Twit = require("twit");
+const graph = require("fbgraph");
 
-const { words } = require('./words.js')
+const { words } = require("./words.js");
 
 async function getMeaning(word) {
-    const response = await fetch(
-        `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.dictionary_api_key}`
-    )
-    const json = await response.json()
+  const response = await fetch(
+    `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.dictionary_api_key}`
+  );
+  const json = await response.json();
 
-    let meaning = ''
+  let meaning = "";
 
-    if (json.length && json[0].shortdef) {
-        const meanings = json.reduce((arr, m) => [...arr, ...m.shortdef], [])
+  if (json.length && json[0].shortdef) {
+    const meanings = json.reduce((arr, m) => [...arr, ...m.shortdef], []);
 
-        meaning = meanings[Math.floor(Math.random() * meanings.length)]
-    }
+    meaning = meanings[Math.floor(Math.random() * meanings.length)];
+  }
 
-    return meaning
+  return meaning;
 }
 
 function facebook(text) {
-    // facebook
-    graph.setAccessToken(process.env.fb_dj_access_token)
+  console.log("facebook", text);
 
-    // get page accounts
-    graph.get('me/accounts', function(err, res) {
+  // facebook
+  graph.setAccessToken(process.env.fb_dj_access_token);
 
-        const dj = res.data.find(p => p.name === 'Daily Jzx');
+  // get page accounts
+  graph.get("me/accounts", function(err, res) {
+    const dj = res.data.find(p => p.name === "Daily Jzx");
 
-        // change access token to page's
-        graph.setAccessToken(dj.access_token)
+    // change access token to page's
+    graph.setAccessToken(dj.access_token);
 
-        // create message
-        var post = {
-            message: text
-        }
+    // create message
+    var post = {
+      message: text
+    };
 
-        // post to page
-        graph.post('/' + dj.id + '/feed', post, function(err, res) {
-            // console.log(res)
-        })
-    })
+    // post to page
+    graph.post("/" + dj.id + "/feed", post, function(err, res) {
+      // console.log(res)
+    });
+  });
 }
 
 function tweet(text) {
-    const T = new Twit({
-        consumer_key: process.env.tw_jzx_consumer_key,
-        consumer_secret: process.env.tw_jzx_consumer_secret,
-        access_token: process.env.tw_jzx_oauth_token,
-        access_token_secret: process.env.tw_jzx_oauth_token_secret
-    })
+  console.log("tweet", text);
 
-    // tweet
+  const T = new Twit({
+    consumer_key: process.env.tw_jzx_consumer_key,
+    consumer_secret: process.env.tw_jzx_consumer_secret,
+    access_token: process.env.tw_jzx_oauth_token,
+    access_token_secret: process.env.tw_jzx_oauth_token_secret
+  });
 
-    T.post('statuses/update', { status: text }, function(err) {
-        if (err) {
-            console.log(err)
-        }
-    })
+  // tweet
+
+  T.post("statuses/update", { status: text }, function(err) {
+    if (err) {
+      console.log(err);
+    }
+  });
 }
 
 async function post() {
-    // pick one at random
-    const word = words[Math.floor(Math.random() * words.length)]
+  // pick one at random
+  const word = words[Math.floor(Math.random() * words.length)];
 
-    const meaning = await getMeaning(word)
+  console.log("word", word);
 
-    const text = meaning ? `${word}: ${meaning}` : word
+  const meaning = await getMeaning(word);
 
-    tweet(text)
+  console.log("meaning", meaning);
 
-    facebook(text)
+  const text = meaning ? `${word}: ${meaning}` : word;
 
-    return word
+  tweet(text);
+
+  facebook(text);
+
+  return word;
 }
 
 // test - remove before deploying
@@ -83,7 +90,7 @@ async function post() {
 
 // lambda
 exports.handler = function(event, context, callback) {
-    const word = post()
+  const word = post();
 
-    callback(null, `posted ${word}`)
-}
+  callback(null, `posted ${word}`);
+};
