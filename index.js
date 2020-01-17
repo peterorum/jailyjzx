@@ -27,6 +27,7 @@ function facebook(text) {
 
   // get page accounts
   graph.get("me/accounts", function(err, res) {
+    console.log("res", res);
     const dj = res.data.find(p => p.name === "Daily Jzx");
 
     // change access token to page's
@@ -67,20 +68,20 @@ async function post() {
 
   const meaning = await getMeaning(word);
 
-  console.log("meaning", meaning);
+  console.log("meaning", word, meaning);
 
   const text = meaning ? `${word}: ${meaning}` : word;
 
   tweet(text.length < 140 ? text : word);
 
-  facebook(text);
+  // facebook(text);
 
   return word;
 }
 
 // test - remove before deploying
 
-// post()
+// post();
 
 // lambda
 exports.handler = function(event, context, callback) {
