@@ -4,6 +4,8 @@ const graph = require("fbgraph");
 
 const { words } = require("./words.js");
 
+// if FB token expires, use extend.js in functalbook to get a new one from graph api explorer & extend it
+
 async function getMeaning(word) {
   const response = await fetch(
     `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.dictionary_api_key}`
