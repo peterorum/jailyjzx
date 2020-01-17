@@ -23,11 +23,11 @@ async function getMeaning(word) {
 
 function facebook(text) {
   // facebook
+  // get from facebook graph api explorer  https://developers.facebook.com/tools/explorer
   graph.setAccessToken(process.env.fb_dj_access_token);
 
   // get page accounts
   graph.get("me/accounts", function(err, res) {
-    console.log("res", res);
     const dj = res.data.find(p => p.name === "Daily Jzx");
 
     // change access token to page's
@@ -72,9 +72,9 @@ async function post() {
 
   const text = meaning ? `${word}: ${meaning}` : word;
 
-  tweet(text.length < 140 ? text : word);
+  // tweet(text.length < 140 ? text : word);
 
-  // facebook(text);
+  facebook(text);
 
   return word;
 }
