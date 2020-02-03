@@ -4,7 +4,12 @@ const graph = require("fbgraph");
 
 const { words } = require("./words.js");
 
-// if FB token expires, use extend.js in functalbook to get a new one from graph api explorer & extend it
+//******************************* */ if FB token expires,
+
+// use
+// https://developers.facebook.com/tools/explorer/
+// then, to extend
+// https://developers.facebook.com/tools/debug/accesstoken/
 
 async function getMeaning(word) {
   const response = await fetch(
