@@ -366,6 +366,7 @@ exports.words = [
   "taiga",
   "taj",
   "tak",
+  "tav",
   "talaq",
   "tex",
   "tich",
