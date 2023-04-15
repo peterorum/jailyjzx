@@ -11,3 +11,6 @@ rand_num=$((1 + RANDOM % num_lines))
 
 # Print the random line
 sed -n "${rand_num}p" $file_path
+
+#pause
+read
